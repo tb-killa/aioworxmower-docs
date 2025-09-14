@@ -1,4 +1,4 @@
-name: Docs Sync
+name: Sync Repo → Wiki or additional with ref generate mkdocs html
 
 on:
   push:
