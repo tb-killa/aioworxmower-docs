@@ -1,0 +1,29 @@
+name: Sync Wiki → Repo
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  sync-repo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Wiki
+        uses: actions/checkout@v4
+
+      - name: Checkout Docs Repo
+        uses: actions/checkout@v4
+        with:
+          repository: tb-killa/aioworxmower-docs
+          path: main-repo
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Sync Wiki → Repo/docs
+        run: |
+          rsync -av --delete . main-repo/docs/
+          cd main-repo
+          git config user.email "ci@example.com"
+          git config user.name "CI Bot"
+          git add docs/
+          git commit -m "sync wiki → docs" || echo "No changes"
+          git push
