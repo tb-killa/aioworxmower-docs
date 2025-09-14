@@ -1,9 +1,9 @@
-
 [tool.poetry]
 name = "aioworxmower-docs"
 version = "0.1.0"
 description = "Documentation for aioworxmower"
 authors = ["aioworxmower Team <dev@example.com>"]
+package-mode = false   # <<< Fix für Poetry ohne Package
 
 [tool.poetry.dependencies]
 python = ">=3.11,<4.0"
