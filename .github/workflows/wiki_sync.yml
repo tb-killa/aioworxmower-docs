@@ -1,29 +1,43 @@
-name: Wiki Sync
+name: Docs Build & Wiki Sync
+
 on:
   push:
     branches: ["main"]
+  workflow_dispatch:   # manuelles Triggern
+
 jobs:
-  sync:
+  build-docs:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
       - name: Install Poetry
         run: pipx install poetry
-      - name: Install deps
-        run: poetry install
+      - name: Install dependencies
+        run: poetry install --no-root
       - name: Build docs
         run: poetry run mkdocs build --strict
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site
+          path: site
+
+  sync-wiki:
+    needs: build-docs
+    runs-on: ubuntu-latest
+    if: ${{ success() }}
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: site
+          path: site
       - name: Push to Wiki
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git clone https://github.com/tb-killa/aioworxmower-docs.wiki.git wiki
+          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/tb-killa/aioworxmower-docs.wiki.git wiki
           cp -r site/* wiki/
           cd wiki
           git config user.email "ci@example.com"
