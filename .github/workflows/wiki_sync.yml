@@ -36,9 +36,9 @@ jobs:
           name: site
           path: site
       - name: Push to Wiki
-          env:
+        env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          run: |
+        run: |
             git clone https://x-access-token:${GITHUB_TOKEN}@github.com/tb-killa/aioworxmower-docs.wiki.git wiki
             cp -r site/* wiki/
             cd wiki
