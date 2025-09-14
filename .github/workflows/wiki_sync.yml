@@ -10,13 +10,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          sparse-checkout: docs
+          sparse-checkout-cone-mode: false
+
       - name: Push Markdown docs to Wiki
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git clone https://x-access-token:${GITHUB_TOKEN}@github.com/tb-killa/aioworxmower-docs.wiki.git wiki
-          rsync -av --delete docs/ wiki/
-          cd wiki
+          git clone https://x-access-token:${GITHUB_TOKEN}@github.com/tb-killa/aioworxmower-docs.wiki.git wiki-repo
+          rsync -av --delete docs/ wiki-repo/
+          cd wiki-repo
           git config user.email "ci@example.com"
           git config user.name "CI Bot"
           git add .
