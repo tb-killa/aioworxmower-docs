@@ -36,12 +36,14 @@ jobs:
           name: site
           path: site
       - name: Push to Wiki
-        run: |
-          git clone https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/tb-killa/aioworxmower-docs.wiki.git wiki
-          cp -r site/* wiki/
-          cd wiki
-          git config user.email "ci@example.com"
-          git config user.name "CI Bot"
-          git add .
-          git commit -m "update wiki" || echo "No changes"
-          git push
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          run: |
+            git clone https://x-access-token:${GITHUB_TOKEN}@github.com/tb-killa/aioworxmower-docs.wiki.git wiki
+            cp -r site/* wiki/
+            cd wiki
+            git config user.email "ci@example.com"
+            git config user.name "CI Bot"
+            git add .
+            git commit -m "update wiki" || echo "No changes"
+            git push
